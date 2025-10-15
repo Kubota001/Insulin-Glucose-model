@@ -6,6 +6,11 @@ function GluInsFig(No)
 %     No 39~51: HFD18wk
 %     No 52~61: HFD28wk
 %     No 62~72: HFD36wk
+% ODE simulations in this study are based on the total glucose amount (mg)
+% with in the mouse. Therefore, a blood volume correction is required to
+% concert these values into blood glucose levels (mg/dL).
+% Blood volume: 72 ml/kg
+% blood glucose levels (mg/dL) = tcrsSim(1,:)/(0.072*weight)*100
 
 time = [0	1	2	3	5	10	15	20	25	30	35	40	45	50	55	60	65	70	80	90	100	110	120	130	140	150	160	170	180];
 
@@ -234,6 +239,84 @@ param = [
 1.04E-06	1.00E-06	0.025847719	1.00E-06	0.001462928	0.001738111	7.96E+01	2093.056194	7.279945172	2.072298688
 ];
 
+weight = [
+26.27
+25.45
+24.4
+24.3
+24.4
+23.4
+23.4
+23.7
+25.07
+25.78
+26
+26.93
+25.03
+31.54
+32.77
+27.06
+30.1
+32.15
+30.45
+30.88
+31.5
+29.28
+25.63
+30.7
+30.72
+32.6
+41.8
+38.44
+39.76
+47
+41
+42.77
+42.56
+41.5
+47.2
+44.48
+37.6
+43.77
+44.3
+37.35
+37.51
+41.08
+43.87
+47.06
+44.5
+49.25
+47.5
+45
+51.76
+47.45
+42.8
+47
+47.76
+46.25
+44.57
+49.8
+53.22
+57.25
+53.52
+50.26
+45.62
+46.2
+53.84
+54.69
+55.02
+54.03
+61.6
+63.12
+56.93
+58.1
+56.75
+56.19
+51.3
+55.3
+55.28
+];
+
 tcrsSim = zeros(4, size(time,2));
 y0 = [param(No,9), 0, 0, param(No,10)];
 tcrsSim(:,1) = y0';
@@ -246,7 +329,8 @@ tcrsSim(:,1) = y0';
         tcrsSim(:,n+1) = y(end,:)';
         y0 = y(end,:)';
     end
-
+    % tcrsSim(1,:) = tcrsSim(1,:)./(0.072*weight(No)*100);
+    tcrsSim(1,:) = tcrsSim(1,:)./(0.072*weight(No))*100;
 figure
 for n = 1:4
     subplot(2,2,n)
